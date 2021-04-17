@@ -1,3 +1,6 @@
 # beantools
 
-stat
+### stat
+
+### flush
+-t, --tube
