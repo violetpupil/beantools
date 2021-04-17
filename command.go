@@ -66,3 +66,24 @@ func Flush(ctx *cli.Context) {
 		}
 	}
 }
+
+func Peek(ctx *cli.Context) {
+	tubeName := ctx.String("tube")
+	tubeSet := NewTubeSet(tubeName)
+	defer func() {
+		err := tubeSet.Conn.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	jobID, jobBody, err := tubeSet.Reserve(time.Second)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(jobBody))
+	err = tubeSet.Conn.Release(jobID, 0, 0)
+	if err != nil {
+		panic(err)
+	}
+}

@@ -21,6 +21,15 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:   "peek",
+			Action: Peek,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name: "tube,t",
+				},
+			},
+		},
 	}
 	err := app.Run(os.Args)
 	if err != nil {

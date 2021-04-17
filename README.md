@@ -4,3 +4,6 @@
 
 ### flush
 -t, --tube
+
+### peek
+-t, --tube
