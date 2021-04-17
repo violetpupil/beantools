@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/urfave/cli"
+	"time"
 )
 
 func Stat(_ *cli.Context) {
@@ -38,4 +39,30 @@ func statTube(tubeName string) {
 	}
 	readyCount := result["current-jobs-ready"]
 	fmt.Println(tubeName, readyCount)
+}
+
+func Flush(ctx *cli.Context) {
+	tubeName := ctx.String("tube")
+	tubeSet := NewTubeSet(tubeName)
+	defer func() {
+		err := tubeSet.Conn.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	for {
+		jobID, _, err := tubeSet.Reserve(time.Second)
+		if err != nil {
+			if err.Error() == "reserve-with-timeout: timeout" {
+				break
+			} else {
+				panic(err)
+			}
+		}
+		err = tubeSet.Conn.Delete(jobID)
+		if err != nil {
+			panic(err)
+		}
+	}
 }

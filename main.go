@@ -12,6 +12,15 @@ func main() {
 			Name:   "stat",
 			Action: Stat,
 		},
+		{
+			Name:   "flush",
+			Action: Flush,
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name: "tube,t",
+				},
+			},
+		},
 	}
 	err := app.Run(os.Args)
 	if err != nil {
