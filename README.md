@@ -2,6 +2,8 @@
 
 ### stat
 
+### stats
+
 ### flush
 -t, --tube
 
