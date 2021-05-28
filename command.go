@@ -20,11 +20,11 @@ func Stat(_ *cli.Context) {
 		panic(err)
 	}
 	for _, tube := range tubes {
-		statTube(tube)
+		fmt.Println(tube, statTube(tube)["current-jobs-ready"])
 	}
 }
 
-func statTube(tubeName string) {
+func statTube(tubeName string) map[string]string {
 	tube := NewTube(tubeName)
 	defer func() {
 		err := tube.Conn.Close()
@@ -37,8 +37,7 @@ func statTube(tubeName string) {
 	if err != nil {
 		panic(err)
 	}
-	readyCount := result["current-jobs-ready"]
-	fmt.Println(tubeName, readyCount)
+	return result
 }
 
 func Flush(ctx *cli.Context) {
