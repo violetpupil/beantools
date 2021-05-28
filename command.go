@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/urfave/cli"
+	"sort"
 	"time"
 )
+
+const DefaultTube = "default"
 
 func Stat(_ *cli.Context) {
 	conn := NewConn()
@@ -19,8 +22,12 @@ func Stat(_ *cli.Context) {
 	if err != nil {
 		panic(err)
 	}
+	sort.Strings(tubes)
+	fmt.Println(DefaultTube, statTube(DefaultTube)["current-jobs-ready"])
 	for _, tube := range tubes {
-		fmt.Println(tube, statTube(tube)["current-jobs-ready"])
+		if tube != DefaultTube {
+			fmt.Println(tube, statTube(tube)["current-jobs-ready"])
+		}
 	}
 }
 
