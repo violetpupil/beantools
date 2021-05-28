@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/stevedomin/termtable"
 	"github.com/urfave/cli"
 	"sort"
 	"time"
@@ -31,6 +32,30 @@ func Stat(_ *cli.Context) {
 	}
 }
 
+func Stats(_ *cli.Context) {
+	conn := NewConn()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	tubes, err := conn.ListTubes()
+	if err != nil {
+		panic(err)
+	}
+	sort.Strings(tubes)
+	var results []map[string]string
+	results = append(results, statTube(DefaultTube))
+	for _, tube := range tubes {
+		if tube != DefaultTube {
+			results = append(results, statTube(tube))
+		}
+	}
+	printStats(results)
+}
+
 func statTube(tubeName string) map[string]string {
 	tube := NewTube(tubeName)
 	defer func() {
@@ -45,6 +70,31 @@ func statTube(tubeName string) map[string]string {
 		panic(err)
 	}
 	return result
+}
+
+func printStats(stats []map[string]string) {
+	table := termtable.NewTable(nil, &termtable.TableOptions{
+		Padding:      1,
+		UseSeparator: true,
+	})
+	table.SetHeader([]string{
+		"Name", "Ready", "Reserved", "Delayed", "Buried",
+	})
+	keys := []string{
+		"name",
+		"current-jobs-ready",
+		"current-jobs-reserved",
+		"current-jobs-delayed",
+		"current-jobs-buried",
+	}
+	for _, stat := range stats {
+		var row []string
+		for _, key := range keys {
+			row = append(row, stat[key])
+		}
+		table.AddRow(row)
+	}
+	fmt.Println(table.Render())
 }
 
 func Flush(ctx *cli.Context) {

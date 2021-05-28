@@ -13,6 +13,10 @@ func main() {
 			Action: Stat,
 		},
 		{
+			Name:   "stats",
+			Action: Stats,
+		},
+		{
 			Name:   "flush",
 			Action: Flush,
 			Flags: []cli.Flag{
