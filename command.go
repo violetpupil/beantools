@@ -78,10 +78,11 @@ func printStats(stats []map[string]string) {
 		UseSeparator: true,
 	})
 	table.SetHeader([]string{
-		"Name", "Ready", "Reserved", "Delayed", "Buried",
+		"Name", "Urgent", "Ready", "Reserved", "Delayed", "Buried",
 	})
 	keys := []string{
 		"name",
+		"current-jobs-urgent",
 		"current-jobs-ready",
 		"current-jobs-reserved",
 		"current-jobs-delayed",
