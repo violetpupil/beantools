@@ -1,4 +1,5 @@
 @echo off
+go build
 set GOARCH=amd64
 set GOOS=linux
 set CGO_ENABLED=0
